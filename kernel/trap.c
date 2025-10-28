@@ -171,6 +171,11 @@ clockintr()
     release(&tickslock);
   }
 
+  // ============= NEW CODE: MLFQ Timer Integration =============
+  // Call MLFQ tick handler for time slice management
+  mlfq_tick();
+  // ============= END OF NEW CODE =============
+
   // ask for the next timer interrupt. this also clears
   // the interrupt request. 1000000 is about a tenth
   // of a second.

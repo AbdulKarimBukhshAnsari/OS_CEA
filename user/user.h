@@ -2,6 +2,15 @@
 
 struct stat;
 
+// Structure for process performance information (MLFQ)
+struct procinfo {
+  int pid;              // Process ID
+  int priority;         // Current priority level
+  int cpu_ticks;        // Total CPU ticks consumed
+  int sched_count;      // Number of times scheduled
+  int timeslice_used;   // Ticks used in current time slice
+};
+
 // system calls
 int fork(void);
 int exit(int) __attribute__((noreturn));
@@ -39,6 +48,10 @@ int memcmp(const void *, const void *, uint);
 void *memcpy(void *, const void *, uint);
 char* sbrk(int);
 char* sbrklazy(int);
+
+
+// my added function 
+int getprocinfo(int pid, struct procinfo *addr);
 
 // printf.c
 void fprintf(int, const char*, ...) __attribute__ ((format (printf, 2, 3)));

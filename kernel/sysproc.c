@@ -107,3 +107,15 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64
+sys_getprocinfo(void)
+{
+  int pid;
+  uint64 addr;
+  
+  argint(0, &pid);
+  argaddr(1, &addr);
+  
+  return getprocinfo(pid, addr);
+}

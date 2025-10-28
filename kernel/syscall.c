@@ -101,6 +101,9 @@ extern uint64 sys_unlink(void);
 extern uint64 sys_link(void);
 extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
+// ============= NEW SYSTEM CALL PROTOTYPE =============
+extern uint64 sys_getprocinfo(void);  // Prototype for new getprocinfo system call
+// ============= END OF NEW PROTOTYPE =============
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -126,6 +129,9 @@ static uint64 (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
+// ============= NEW SYSTEM CALL ENTRY =============
+[SYS_getprocinfo] sys_getprocinfo,     // Add new system call to the table
+// ============= END OF NEW ENTRY =============
 };
 
 void
