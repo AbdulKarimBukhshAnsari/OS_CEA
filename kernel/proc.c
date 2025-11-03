@@ -630,7 +630,7 @@ yield(void)
 
 // Global starvation prevention counter
 static int starvation_counter = 0;
-#define STARVATION_THRESHOLD 200  // Boost all processes every 1000 ticks
+#define STARVATION_THRESHOLD 10  // Boost all processes every 10 ticks
 
 void
 mlfq_tick(void)

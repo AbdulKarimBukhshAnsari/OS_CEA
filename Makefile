@@ -144,6 +144,9 @@ UPROGS=\
 	$U/_dorphan\
 	$U/_mlfqtest\
 	$U/_iotest\
+	$U/_cpu_bound\
+	$U/_io_bound\
+	$U/_benchmark\
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)
