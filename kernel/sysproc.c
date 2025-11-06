@@ -108,6 +108,31 @@ sys_uptime(void)
   return xticks;
 }
 
+// sleep for specified number of ticks
+uint64
+sys_sleep(void)
+{
+  int ticks_to_sleep;
+  uint ticks0;
+
+  argint(0, &ticks_to_sleep);
+  
+  if(ticks_to_sleep < 0)
+    return -1;
+    
+  acquire(&tickslock);
+  ticks0 = ticks;
+  while(ticks - ticks0 < ticks_to_sleep){
+    if(killed(myproc())){
+      release(&tickslock);
+      return -1;
+    }
+    sleep(&ticks, &tickslock);
+  }
+  release(&tickslock);
+  return 0;
+}
+
 uint64
 sys_getprocinfo(void)
 {

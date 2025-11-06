@@ -56,6 +56,7 @@ int memcmp(const void *, const void *, uint);
 void *memcpy(void *, const void *, uint);
 char* sbrk(int);
 char* sbrklazy(int);
+int sleep(int ticks);
 
 
 // my added function 

@@ -1,0 +1,17 @@
+xv6 with MLFQ Scheduler
+
+This is a modified version of xv6 that implements a Multi-Level Feedback Queue (MLFQ) scheduler.
+
+Key features:
+- 3-level priority-based scheduling (HIGH, MEDIUM, LOW)
+- Dynamic priority adjustment based on process behavior
+- Enhanced performance monitoring with getprocinfo() system call
+- Timing metrics including turnaround time, response time, and wait time
+
+Test programs:
+- benchcmp: Comprehensive scheduler comparison benchmark
+- cpu_bound: CPU-intensive workload test
+- io_bound: I/O-intensive workload test
+- mlfqtest: Basic MLFQ functionality test
+
+For detailed documentation, see README.md

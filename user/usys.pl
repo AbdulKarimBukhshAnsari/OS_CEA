@@ -42,7 +42,7 @@ entry("getpid");
 entry("sbrk");
 entry("pause");
 entry("uptime");
-
+entry("sleep");
 
 # My added function 
 entry("getprocinfo");

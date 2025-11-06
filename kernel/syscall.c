@@ -103,6 +103,7 @@ extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
 // ============= NEW SYSTEM CALL PROTOTYPE =============
 extern uint64 sys_getprocinfo(void);  // Prototype for new getprocinfo system call
+extern uint64 sys_sleep(void);        // Prototype for sleep system call
 // ============= END OF NEW PROTOTYPE =============
 
 // An array mapping syscall numbers from syscall.h
@@ -131,6 +132,7 @@ static uint64 (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 // ============= NEW SYSTEM CALL ENTRY =============
 [SYS_getprocinfo] sys_getprocinfo,     // Add new system call to the table
+[SYS_sleep]   sys_sleep,              // Add sleep system call to the table
 // ============= END OF NEW ENTRY =============
 };
 
