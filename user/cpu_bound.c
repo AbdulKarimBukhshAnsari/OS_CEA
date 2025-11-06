@@ -21,13 +21,17 @@ int main(int argc, char *argv[]) {
     struct procinfo info;
     int pid = getpid();
     
-    printf("=== CPU-Bound Workload Test ===\n");
-    printf("This should demonstrate priority demotion\n\n");
+    printf("=====================================\n");
+    printf("     CPU-BOUND PROCESS TEST\n");
+    printf("     Scheduler: MLFQ\n");
+    printf("=====================================\n\n");
     
     // Initial state
     getprocinfo(pid, &info);
-    printf("PHASE 0 - Initial State:\n");
-    printf("  Priority: %d \n", info.priority);
+    printf("Initial State:\n");
+    printf("  PID: %d\n", info.pid);
+    printf("  Priority: %d (MLFQ starts HIGH)\n", info.priority);
+    printf("  Start Time: %lu ticks\n", info.start_time);
     printf("  CPU Ticks: %d\n", info.cpu_ticks);
     printf("  Schedule Count: %d\n\n", info.sched_count);
     
@@ -37,8 +41,9 @@ int main(int argc, char *argv[]) {
     
     getprocinfo(pid, &info);
     printf("  After Phase 1:\n");
-    printf("    Priority: %d\n", info.priority);
+    printf("    Priority: %d (MLFQ: demoted?)\n", info.priority);
     printf("    CPU Ticks: %d\n", info.cpu_ticks);
+    printf("    Wait Time: %lu ticks\n", info.total_wait);
     printf("    Schedule Count: %d\n\n", info.sched_count);
     
     // PHASE 2: Second CPU burst (should demote to priority 2)
@@ -47,8 +52,9 @@ int main(int argc, char *argv[]) {
     
     getprocinfo(pid, &info);
     printf("  After Phase 2:\n");
-    printf("    Priority: %d (should be 2 - LOW)\n", info.priority);
+    printf("    Priority: %d (MLFQ: should be LOW)\n", info.priority);
     printf("    CPU Ticks: %d\n", info.cpu_ticks);
+    printf("    Wait Time: %lu ticks\n", info.total_wait);
     printf("    Schedule Count: %d\n\n", info.sched_count);
     
     // PHASE 3: Final CPU burst (should remain at priority 2)
@@ -57,13 +63,19 @@ int main(int argc, char *argv[]) {
     
     // Final state
     getprocinfo(pid, &info);
-    printf("FINAL RESULTS:\n");
-    printf("  Priority: %d \n", info.priority);
+    printf("=====================================\n");
+    printf("FINAL RESULTS (MLFQ):\n");
+    printf("  Priority: %d (0=HIGH, 1=MED, 2=LOW)\n", info.priority);
+    printf("  Turnaround Time: %lu ticks\n", info.end_time - info.start_time);
+    printf("  Response Time: %lu ticks\n", info.first_run - info.start_time);
+    printf("  Wait Time: %lu ticks\n", info.total_wait);
     printf("  CPU Ticks: %d\n", info.cpu_ticks);
     printf("  Schedule Count: %d\n", info.sched_count);
-    printf("  Timeslice Used: %d\n", info.timeslice_used);
-    
-    printf("\n=== CPU-Bound Test Complete ===\n");
+    printf("  Timeslice Used: %d/%d\n", info.timeslice_used, 
+           info.priority == 0 ? 4 : (info.priority == 1 ? 8 : 16));
+    printf("\nNOTE: In MLFQ, CPU-bound drops to priority 2\n");
+    printf("      Compare with RR where it stays at 0\n");
+    printf("=====================================\n");
     
     exit(0);
 }

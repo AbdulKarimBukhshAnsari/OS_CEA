@@ -147,6 +147,7 @@ UPROGS=\
 	$U/_cpu_bound\
 	$U/_io_bound\
 	$U/_benchmark\
+	$U/_benchcmp\
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)

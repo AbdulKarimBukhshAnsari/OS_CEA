@@ -1,3 +1,5 @@
+#include "types.h"
+
 // Saved registers for kernel context switches.
 struct context {
   uint64 ra;
@@ -102,6 +104,10 @@ struct procinfo {
   int cpu_ticks;        // Total CPU ticks consumed
   int sched_count;      // Number of times scheduled
   int timeslice_used;   // Ticks used in current time slice
+  uint64 start_time;    // Time when process was created
+  uint64 end_time;      // Time when process finished (0 if still running)
+  uint64 first_run;     // Time when process was first scheduled
+  uint64 total_wait;    // Total time spent waiting to be scheduled
 };
 
 // =====End Of Modified Code ======
@@ -139,4 +145,11 @@ struct proc {
   int cpu_ticks;               // Total CPU ticks consumed
   int sched_count;             // Number of times scheduled
   int yielded_io;              // Flag: 1 if yielded for I/O, 0 if time slice expired
+  
+  // Timing metrics for performance comparison
+  uint64 start_time;           // Time when process was created
+  uint64 end_time;             // Time when process finished (0 if still running)
+  uint64 first_run;            // Time when process was first scheduled (0 if not yet run)
+  uint64 total_wait;           // Accumulated wait time (updated each time scheduled)
+  uint64 last_scheduled;       // Time when last scheduled (for wait time calculation)
 };

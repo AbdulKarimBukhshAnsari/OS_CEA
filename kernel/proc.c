@@ -48,6 +48,13 @@ void init_mlfq_proc(struct proc *p) {
   p->cpu_ticks = 0;                             // No CPU time consumed
   p->sched_count = 0;                           // Not scheduled yet
   p->yielded_io = 0;                            // Not yielded for I/O
+  
+  // Initialize timing metrics
+  p->start_time = ticks;                        // Record creation time
+  p->end_time = 0;                              // Not finished yet
+  p->first_run = 0;                             // Not run yet
+  p->total_wait = 0;                            // No wait time yet
+  p->last_scheduled = ticks;                    // Initialize last scheduled time
 }
 
 // Anti-starvation mechanism: boost all processes to highest priority
@@ -404,6 +411,7 @@ kexit(int status)
 
   p->xstate = status;
   p->state = ZOMBIE;
+  p->end_time = ticks;  // Record end time for performance metrics
 
   release(&wait_lock);
 
@@ -539,11 +547,19 @@ scheduler(void)
           c->proc = p;
           p->sched_count++;
           
+          // Track timing metrics
+          if(p->first_run == 0) {
+            p->first_run = ticks;  // Record first time scheduled
+          }
+          // Accumulate wait time since last scheduled
+          p->total_wait += (ticks - p->last_scheduled);
+          
           // === REMOVED: timeslice_used reset and demotion logic from here ===
           // Just do the context switch
           swtch(&c->context, &p->context);
 
-          // Process has returned
+          // Process has returned - update last scheduled time
+          p->last_scheduled = ticks;
           c->proc = 0;
           found = 1;
           
@@ -877,6 +893,12 @@ getprocinfo(int pid, uint64 addr)
       info.cpu_ticks = p->cpu_ticks; // Total CPU ticks consumed by process
       info.sched_count = p->sched_count;     // Number of times process was scheduled
       info.timeslice_used = p->timeslice_used; // Ticks used in current time slice
+      
+      // Timing metrics for comparison
+      info.start_time = p->start_time;       // When process was created
+      info.end_time = p->end_time;           // When process finished (0 if running)
+      info.first_run = p->first_run;         // When process was first scheduled
+      info.total_wait = p->total_wait;       // Total accumulated wait time
       
       release(&p->lock);             // Release lock before copying to user space
       

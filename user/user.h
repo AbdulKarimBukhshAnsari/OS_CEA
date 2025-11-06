@@ -2,6 +2,10 @@
 
 struct stat;
 
+// Type definitions for compatibility
+typedef unsigned int   uint;
+typedef unsigned long uint64;
+
 // Structure for process performance information (MLFQ)
 struct procinfo {
   int pid;              // Process ID
@@ -9,6 +13,10 @@ struct procinfo {
   int cpu_ticks;        // Total CPU ticks consumed
   int sched_count;      // Number of times scheduled
   int timeslice_used;   // Ticks used in current time slice
+  uint64 start_time;    // Time when process was created
+  uint64 end_time;      // Time when process finished (0 if still running)
+  uint64 first_run;     // Time when process was first scheduled
+  uint64 total_wait;    // Total time spent waiting to be scheduled
 };
 
 // system calls
